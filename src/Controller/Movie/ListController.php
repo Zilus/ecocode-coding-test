@@ -2,7 +2,6 @@
 
 namespace App\Controller\Movie;
 
-use App\Entity\Movie;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,12 +12,14 @@ class ListController extends AbstractController
      */
     public function index(): Response
     {
-        $movieRepository = $this->getDoctrine()->getRepository(Movie::class);
+        $currentUser = $this->getUser();
+
+        $movies = $currentUser->getMovies();
 
         return $this->render(
             'movie-list.html.twig',
             [
-                'movies' => $movieRepository->findAll()
+                'movies' => $movies
             ]
         );
     }
