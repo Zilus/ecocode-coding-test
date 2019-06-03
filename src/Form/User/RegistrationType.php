@@ -2,6 +2,7 @@
 
 namespace App\Form\User;
 
+use App\DBAL\Types\TitleType;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -25,7 +26,7 @@ class RegistrationType extends AbstractType
                 ChoiceType::class,
                 [
                     'required' => true,
-                    'choices'  => $this->getTitleChoices(),
+                    'choices'  => TitleType::getChoices(),
                 ]
             )
             ->add(
@@ -66,10 +67,5 @@ class RegistrationType extends AbstractType
                 'data_class' => User::class
             ]
         );
-    }
-
-    private function getTitleChoices(): array
-    {
-        return User::TITLES;
     }
 }

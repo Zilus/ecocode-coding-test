@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -15,6 +16,7 @@ class User implements UserInterface
 {
     public const FIRST_LOGIN_FLAG = 'app_user_first_login';
 
+    //No need to move this to a Enum field, no backend here :p
     protected const TYPE_USER  = 'user';
     protected const TYPE_ADMIN = 'admin';
 
@@ -31,14 +33,6 @@ class User implements UserInterface
         self::STATUS_ACTIVE,
         self::STATUS_INACTIVE,
         self::STATUS_DELETED
-    ];
-
-    public const TITLE_MR = 'mr';
-    public const TITLE_MS = 'ms';
-
-    public const TITLES = [
-        self::TITLE_MR => self::TITLE_MR,
-        self::TITLE_MS => self::TITLE_MS,
     ];
 
     /**
@@ -101,7 +95,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="login_count", type="integer")
      */
-    private $loginCount = 0;
+    private $loginCount = 1;
 
     /**
      * @var DateTime
@@ -126,14 +120,21 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", nullable=true)
+     * @ORM\Column(name="title", type="title_type")
+     * @DoctrineAssert\Enum(entity="App\DBAL\Types\TitleType")
      */
     private $title;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Movie", inversedBy="users")
+     */
+    private $movies;
 
     public function __construct()
     {
         $this->setRoles(['ROLE_USER']);
         $this->createdAt = new DateTime();
+        $this->lastLogin = new DateTime();
     }
 
     public function getId(): ?int
@@ -378,6 +379,18 @@ class User implements UserInterface
     public function setTitle($title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getMovies(): ?Movie
+    {
+        return $this->movies;
+    }
+
+    public function setMovies(?Movie $movies): self
+    {
+        $this->movies = $movies;
 
         return $this;
     }
