@@ -29,7 +29,7 @@ services:
 
 
 
-    App\EventListener\LocaleListener:
+    App\EventListener\User\LocaleListener:
         arguments: ['%kernel.default_locale%']
         tags:
             - { name: kernel.event_subscriber }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,35 +13,33 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements UserInterface
 {
-    const FIRST_LOGIN_FLAG = 'app_user_first_login';
+    public const FIRST_LOGIN_FLAG = 'app_user_first_login';
 
-    const TYPE_USER = 'user';
-    const TYPE_ADMIN = 'admin';
+    protected const TYPE_USER  = 'user';
+    protected const TYPE_ADMIN = 'admin';
 
-    const TYPES = [
+    protected const TYPES = [
         self::TYPE_USER,
         self::TYPE_ADMIN
     ];
 
-    const STATUS_ACTIVE = 'active';
-    const STATUS_INACTIVE = 'inactive';
-    const STATUS_DELETED = 'deleted';
+    protected const STATUS_ACTIVE   = 'active';
+    protected const STATUS_INACTIVE = 'inactive';
+    protected const STATUS_DELETED  = 'deleted';
 
-    const STATUS = [
+    protected const STATUS = [
         self::STATUS_ACTIVE,
         self::STATUS_INACTIVE,
         self::STATUS_DELETED
     ];
 
+    public const TITLE_MR = 'mr';
+    public const TITLE_MS = 'ms';
 
-    const TITLE_MR = 'mr';
-    const TITLE_MS = 'ms';
-
-    const TITLES = [
-        self::TITLE_MR,
-        self::TITLE_MS,
+    public const TITLES = [
+        self::TITLE_MR => self::TITLE_MR,
+        self::TITLE_MS => self::TITLE_MS,
     ];
-
 
     /**
      * @ORM\Id()
@@ -90,29 +89,28 @@ class User implements UserInterface
     private $password;
     private $plainPassword;
 
-
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
      */
     private $lastLogin;
 
     /**
-     * @var \DateTime
+     * @var int
      *
      * @ORM\Column(name="login_count", type="integer")
      */
-    private $loginCount;
+    private $loginCount = 1;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $createdAt;
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
@@ -130,14 +128,12 @@ class User implements UserInterface
      *
      * @ORM\Column(name="title", type="string", nullable=true)
      */
-    private $title = null;
-
+    private $title;
 
     public function __construct()
     {
         $this->setRoles(['ROLE_USER']);
-        $this->createdAt  = new \DateTime();
-        $this->loginCount = 0;
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int
@@ -189,16 +185,17 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
     /**
      * @param string $status
+     *
      * @return $this
      */
-    public function setStatus($status)
+    public function setStatus($status): self
     {
         $this->status = $status;
 
@@ -208,7 +205,7 @@ class User implements UserInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
     }
@@ -216,7 +213,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -226,20 +223,19 @@ class User implements UserInterface
      *
      * @return $this
      */
-    public function setType($type)
+    public function setType($type): self
     {
         $this->type = $type;
 
         return $this;
     }
 
-
     /**
      * @see UserInterface
      */
     public function getPassword(): string
     {
-        return (string)$this->password;
+        return $this->password;
     }
 
     public function setPassword(string $password): self
@@ -260,7 +256,7 @@ class User implements UserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
@@ -269,7 +265,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getPlainPassword()
+    public function getPlainPassword(): string
     {
         return $this->plainPassword;
     }
@@ -279,7 +275,7 @@ class User implements UserInterface
      *
      * @return $this
      */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword($plainPassword): self
     {
         $this->plainPassword = $plainPassword;
 
@@ -289,37 +285,37 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * @param string $name
+     *
      * @return $this
      */
-    public function setName(string $name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-
     /**
-     * @return \DateTime
+     * @return int
      */
-    public function getLoginCount()
+    public function getLoginCount(): int
     {
         return $this->loginCount;
     }
 
     /**
-     * @param \DateTime $loginCount
+     * @param int $loginCount
      *
      * @return $this
      */
-    public function setLoginCount($loginCount)
+    public function setLoginCount($loginCount): self
     {
         $this->loginCount = $loginCount;
 
@@ -327,19 +323,19 @@ class User implements UserInterface
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getLastLogin()
+    public function getLastLogin(): DateTime
     {
         return $this->lastLogin;
     }
 
     /**
-     * @param \DateTime $lastLogin
+     * @param DateTime $lastLogin
      *
      * @return $this
      */
-    public function setLastLogin($lastLogin)
+    public function setLastLogin(DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
 
@@ -349,7 +345,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -359,7 +355,7 @@ class User implements UserInterface
      *
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale($locale): self
     {
         $this->locale = $locale;
 
@@ -369,7 +365,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -379,7 +375,7 @@ class User implements UserInterface
      *
      * @return $this
      */
-    public function setTitle($title)
+    public function setTitle($title): self
     {
         $this->title = $title;
 

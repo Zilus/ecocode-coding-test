@@ -1,11 +1,9 @@
 <?php
 
-namespace App\EventListener;
-
+namespace App\EventListener\User;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class LocaleListener implements EventSubscriberInterface
 {
@@ -13,6 +11,7 @@ class LocaleListener implements EventSubscriberInterface
 
     /**
      * LocaleListener constructor.
+     *
      * @param string $defaultLocale
      */
     public function __construct($defaultLocale = 'en')
@@ -21,9 +20,9 @@ class LocaleListener implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
         if (!$request->hasPreviousSession()) {
@@ -40,7 +39,7 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             // must be registered after the default Locale listener

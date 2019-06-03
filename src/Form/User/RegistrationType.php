@@ -15,9 +15,9 @@ class RegistrationType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add(
@@ -28,8 +28,20 @@ class RegistrationType extends AbstractType
                     'choices'  => $this->getTitleChoices(),
                 ]
             )
-            ->add('name', TextType::class, ['required' => true])
-            ->add('email', TextType::class, ['required' => true])
+            ->add(
+                'name',
+                TextType::class,
+                [
+                    'required' => true
+                ]
+            )
+            ->add(
+                'email',
+                TextType::class,
+                [
+                    'required' => true
+                ]
+            )
             ->add(
                 'plainPassword',
                 RepeatedType::class,
@@ -47,7 +59,7 @@ class RegistrationType extends AbstractType
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [
@@ -56,11 +68,8 @@ class RegistrationType extends AbstractType
         );
     }
 
-    private function getTitleChoices()
+    private function getTitleChoices(): array
     {
-        return [
-            'mr' => User::TITLE_MR,
-            'ms' => User::TITLE_MS
-        ];
+        return User::TITLES;
     }
 }

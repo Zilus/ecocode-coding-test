@@ -5,23 +5,23 @@
 namespace App\DataFixtures;
 
 use App\Entity\User;
-use App\Service\UserManager;
+use App\Service\User\Manager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class UserFixture extends Fixture
 {
     /**
-     * @var UserManager
+     * @var Manager
      */
     private $userManager;
 
-    public function __construct(UserManager $userManager)
+    public function __construct(Manager $userManager)
     {
         $this->userManager = $userManager;
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $user = new User();
 

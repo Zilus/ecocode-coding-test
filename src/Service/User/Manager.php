@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\User;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class UserManager
+class Manager
 {
     /**
      * @var EntityRepository
@@ -29,21 +29,19 @@ class UserManager
     /**
      * UserManager constructor.
      *
-     * @param UserRepository $ur
+     * @param UserRepository          $ur
      * @param EncoderFactoryInterface $ef
-     * @param EntityManagerInterface $em
+     * @param EntityManagerInterface  $em
      */
     public function __construct(
         UserRepository $ur,
         EncoderFactoryInterface $ef,
         EntityManagerInterface $em
-    )
-    {
+    ) {
         $this->userRepository = $ur;
         $this->encoderFactory = $ef;
         $this->em             = $em;
     }
-
 
     /**
      * @param $email
@@ -55,11 +53,10 @@ class UserManager
         return $this->userRepository->findOneBy(['email' => $email]);
     }
 
-
     /**
      * @param UserInterface $user
      */
-    public function updatePassword(UserInterface $user)
+    public function updatePassword(UserInterface $user): void
     {
         if (0 < mb_strlen($password = $user->getPlainPassword())) {
             $encoder = $this->getEncoder($user);
@@ -80,17 +77,16 @@ class UserManager
     /**
      * @param UserInterface $user
      */
-    public function saveUser(UserInterface $user)
+    public function saveUser(UserInterface $user): void
     {
         $this->em->persist($user);
         $this->em->flush();
     }
 
-
     /**
      * @param User $user
      */
-    public function remove(User $user)
+    public function remove(User $user): void
     {
         $this->em->remove($user);
         $this->em->flush();
