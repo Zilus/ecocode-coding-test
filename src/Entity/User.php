@@ -101,7 +101,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="login_count", type="integer")
      */
-    private $loginCount = 1;
+    private $loginCount = 0;
 
     /**
      * @var DateTime
@@ -121,7 +121,7 @@ class User implements UserInterface
      *
      * @ORM\Column(name="locale", type="string")
      */
-    private $locale;
+    private $locale = 'en';
 
     /**
      * @var string
@@ -265,7 +265,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getPlainPassword(): string
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -283,9 +283,9 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -365,7 +365,7 @@ class User implements UserInterface
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }

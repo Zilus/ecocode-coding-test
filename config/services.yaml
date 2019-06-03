@@ -37,4 +37,4 @@ services:
 
     backend.user.manager:
         public: true
-        class: 'App\Service\UserManager'
+        class: 'App\Service\User\Manager'
